@@ -1,6 +1,6 @@
 import { useState } from "react";
-import imageCompression from "browser-image-compression"; // Importa la librería
-import { ENV } from "../config";
+import { uploadImage } from "./services/services"; // Importa la función de subida de imágenes
+import { compressFileSelection } from "./utilities"; // Importa la función de selección de archivos
 
 const UploadAlbumImages = () => {
   const [albumName, setAlbumName] = useState(""); // Nombre del álbum
@@ -10,35 +10,11 @@ const UploadAlbumImages = () => {
   const [thumbnail, setThumbnail] = useState(null); // Miniatura seleccionada
   const [albumDescription, setAlbumDescription] = useState(""); // Descripción del álbum
 
-  const cloudName = ENV.CLOUD_NAME;
-  const uploadPreset = ENV.UPLOAD_PRESET;
 
   // Funciones para actualizar los estados
   const handleAlbumNameChange = (e) => setAlbumName(e.target.value);
   const handleFolderNameChange = (e) => setFolderName(e.target.value);
   const handleAlbumDescriptionChange = (e) => setAlbumDescription(e.target.value);
-
-  const handleFileSelection = async (e) => {
-    const files = Array.from(e.target.files);
-
-    try {
-      // Comprimir las imágenes antes de subirlas
-      const compressedFiles = await Promise.all(
-        files.map((file) =>
-          imageCompression(file, {
-            maxSizeMB: 10, // Tamaño máximo en MB
-            maxWidthOrHeight: 1920, // Ancho o alto máximo
-            useWebWorker: true, // Mejor rendimiento
-          })
-        )
-      );
-
-      setSelectedFiles(compressedFiles); // Guardamos las imágenes comprimidas
-    } catch (error) {
-      console.error("Error durante la compresión de imágenes:", error);
-      alert("Hubo un problema al comprimir las imágenes.");
-    }
-  };
 
   const uploadImagesToCloudinary = async () => {
     const uploadedImages = await Promise.all(
@@ -46,37 +22,6 @@ const UploadAlbumImages = () => {
     );
     setImages((prevImages) => [...prevImages, ...uploadedImages]); // Guardar las imágenes subidas
     setSelectedFiles([]); // Limpiar la selección de archivos después de la carga
-  };
-
-  const uploadImage = (file, folder) => {
-    return new Promise((resolve, reject) => {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", uploadPreset);
-
-      if (folder) {
-        formData.append("folder", folder);
-      }
-
-      fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-        method: "POST",
-        body: formData,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          resolve({
-            id: data.public_id,
-            url: data.secure_url,
-            name: file.name,
-            width: data.width,
-            height: data.height,
-          });
-        })
-        .catch((error) => {
-          console.error("Error uploading to Cloudinary:", error);
-          reject(error);
-        });
-    });
   };
 
   const handleSetThumbnail = (image) => setThumbnail(image.id); // Establecer miniatura
@@ -93,7 +38,6 @@ const UploadAlbumImages = () => {
   };
 
   const handleSaveAlbum = () => {
-    console.log({albumName, thumbnail,albumDescription})
     if (!albumName || !thumbnail || !albumDescription) {
       alert("Por favor, completa todos los campos.");
       return;
@@ -111,8 +55,12 @@ const UploadAlbumImages = () => {
     alert("Álbum guardado con éxito!");
   };
 
+  const handleFileSelection = async (e) => {
+    const compressedFiles = await compressFileSelection(e);
+    setSelectedFiles(compressedFiles); // Guardamos las imágenes comprimidas
+  }
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="w-4/6 mx-auto p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-xl font-semibold mb-4">Upload Album Images</h2>
 
       {/* Nombre del álbum */}
