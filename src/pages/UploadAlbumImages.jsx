@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { uploadImage } from "./services/services"; // Importa la función de subida de imágenes
-import { compressFileSelection } from "./utilities"; // Importa la función de selección de archivos
+import { uploadImage } from "../services/services"; // Importa la función de subida de imágenes
+import { compressFileSelection } from "../utilities"; // Importa la función de selección de archivos
 
 const UploadAlbumImages = () => {
   const [albumName, setAlbumName] = useState(""); // Nombre del álbum
@@ -88,7 +88,7 @@ const UploadAlbumImages = () => {
 
       {/* Nombre de la carpeta */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Folder Name</label>
+        <label className="block text-sm font-medium text-gray-700">Nombre de </label>
         <input
           type="text"
           placeholder="Enter folder name"
@@ -100,7 +100,7 @@ const UploadAlbumImages = () => {
 
       {/* Selección de imágenes */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Images</label>
+        <label className="block text-sm font-medium text-gray-700">Imagenes</label>
         <div className="flex items-center justify-center p-4 border border-gray-300 rounded-lg mb-4">
           <input
             type="file"
@@ -113,7 +113,7 @@ const UploadAlbumImages = () => {
           <label htmlFor="imageUpload" className="cursor-pointer text-center">
             <div className="flex flex-col items-center">
               <span className="text-2xl">📷</span>
-              <span className="mt-2 text-sm text-gray-600">Add Images</span>
+              <span className="mt-2 text-sm text-gray-600">Agregar imagenes</span>
             </div>
           </label>
         </div>
@@ -151,13 +151,13 @@ const UploadAlbumImages = () => {
           onClick={handleClearImages}
           className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md"
         >
-          Clear
+          Limpiar
         </button>
         <button
           onClick={uploadImagesToCloudinary}
           className="px-4 py-2 bg-black text-white rounded-md"
         >
-          Upload Album
+          Subir album
         </button>
       </div>
 
@@ -167,7 +167,7 @@ const UploadAlbumImages = () => {
           onClick={handleSaveAlbum} // Guardar los datos del álbum
           className="px-4 py-2 bg-green-500 text-white rounded-md"
         >
-          Save Album
+          Guardar album
         </button>
       </div>
     </div>
