@@ -1,18 +1,18 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import UploadAlbumImages from "./pages/UploadAlbumImages";
 import Home from "./pages/Home";
+import { Layout } from "./layout/layout";
 
 function App() {
   return (
-    // <div className="min-h-screen flex items-center justify-center bg-gray-100">
-    //   <UploadAlbumImages />
-    // </div>
     <Router>
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/upload" element={<UploadAlbumImages />} />
-    </Routes>
-  </Router>
+      <Routes>
+        <Route element={ <Layout /> } >
+          <Route path="/" element={<Home />} />
+          <Route path="/upload" element={<UploadAlbumImages />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 

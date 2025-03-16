@@ -61,11 +61,11 @@ const UploadAlbumImages = () => {
   }
   return (
     <div className="w-4/6 mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold mb-4">Upload Album Images</h2>
+      <h2 className="text-xl font-semibold mb-4">Subida de imagenes</h2>
 
       {/* Nombre del álbum */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Album Name</label>
+        <label className="block text-sm font-medium text-gray-700">Nombre de album</label>
         <input
           type="text"
           placeholder="Enter album name"
@@ -77,7 +77,7 @@ const UploadAlbumImages = () => {
 
       {/* Descripción del álbum */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Album Description</label>
+        <label className="block text-sm font-medium text-gray-700">Descrición de album</label>
         <textarea
           placeholder="Enter album description"
           value={albumDescription} // Valor del estado
@@ -88,7 +88,7 @@ const UploadAlbumImages = () => {
 
       {/* Nombre de la carpeta */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Nombre de </label>
+        <label className="block text-sm font-medium text-gray-700">Nombre de Carpeta </label>
         <input
           type="text"
           placeholder="Enter folder name"
