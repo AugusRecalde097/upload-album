@@ -1,6 +1,9 @@
-import { useState } from "react";
-import { uploadImage } from "../services/services"; // Importa la función de subida de imágenes
+import { useEffect, useState } from "react";
+import { uploadAlbum, uploadImage } from "../services/services"; // Importa la función de subida de imágenes
 import { compressFileSelection } from "../utilities"; // Importa la función de selección de archivos
+import { useNavigate } from "react-router-dom";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 const UploadAlbumImages = () => {
   const [albumName, setAlbumName] = useState(""); // Nombre del álbum
@@ -9,14 +12,51 @@ const UploadAlbumImages = () => {
   const [images, setImages] = useState([]); // Imágenes subidas
   const [thumbnail, setThumbnail] = useState(null); // Miniatura seleccionada
   const [albumDescription, setAlbumDescription] = useState(""); // Descripción del álbum
+  const navigate = useNavigate();
+  const [alertOpen, setAlertOpen] = useState({
+    open: false,
+    message: "Hello World!",
+    severity: "error",
+  });
 
+  useEffect(() => {
+    console.log("Alert Open:", alertOpen);
+  }, [alertOpen]);
+
+  const handleNavigation = (url) => {
+    navigate(url);
+  };
+
+  const showAlert = (newState) => {
+    console.log(alertOpen);
+    setAlertOpen({ ...newState, open: true });
+  };
+
+  const handleClose = () => {
+    setAlertOpen({ ...alertOpen, open: false });
+  };
 
   // Funciones para actualizar los estados
   const handleAlbumNameChange = (e) => setAlbumName(e.target.value);
   const handleFolderNameChange = (e) => setFolderName(e.target.value);
-  const handleAlbumDescriptionChange = (e) => setAlbumDescription(e.target.value);
+  const handleAlbumDescriptionChange = (e) =>
+    setAlbumDescription(e.target.value);
 
   const uploadImagesToCloudinary = async () => {
+    if (!albumName || !albumDescription || !folderName) {
+      showAlert({
+        message: "Por favor, completa todos los campos.",
+        severity: "error",
+      });
+      return;
+    }
+    if (!selectedFiles.length) {
+      showAlert({
+        message: "Por favor, seleccione imagenes para subir album.",
+        severity: "error",
+      });
+      return;
+    }
     const uploadedImages = await Promise.all(
       selectedFiles.map((file) => uploadImage(file, folderName))
     );
@@ -33,39 +73,75 @@ const UploadAlbumImages = () => {
   };
 
   const handleDeleteImage = (imageId) => {
-    setImages((prevImages) => prevImages.filter((image) => image.id !== imageId));
+    setImages((prevImages) =>
+      prevImages.filter((image) => image.id !== imageId)
+    );
     if (thumbnail === imageId) setThumbnail(null);
   };
 
-  const handleSaveAlbum = () => {
+  const handleSaveAlbum = async () => {
     if (!albumName || !thumbnail || !albumDescription) {
-      alert("Por favor, completa todos los campos.");
+      showAlert({
+        message: "Por favor, completa todos los campos.",
+        severity: "error",
+      });
       return;
     }
 
     const albumData = {
-      name: albumName,
+      title: albumName,
       description: albumDescription,
       thumbnail: thumbnail, // ID de la miniatura seleccionada
       images: images, // Todas las imágenes subidas
     };
 
+    const addAlbum = await uploadAlbum(albumData);
+
+    if (addAlbum?.error) {
+      showAlert({
+        message: "Error al guardar el álbum.",
+        severity: "error",
+      });
+      return;
+    }
     // Aquí puedes enviar albumData a tu servidor o base de datos para guardar
-    console.log("Album Data:", albumData);
-    alert("Álbum guardado con éxito!");
+    showAlert({
+      message: "Álbum guardado con éxito!",
+      severity: "success",
+    });
+    // handleNavigation("/");
   };
 
   const handleFileSelection = async (e) => {
     const compressedFiles = await compressFileSelection(e);
     setSelectedFiles(compressedFiles); // Guardamos las imágenes comprimidas
-  }
+  };
+
   return (
     <div className="w-4/6 mx-auto p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-xl font-semibold mb-4">Subida de imagenes</h2>
-
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        open={alertOpen?.open}
+        autoHideDuration={5000}
+      >
+        <Alert
+          onClose={handleClose}
+          severity={alertOpen.severity} // 'success' | 'info' | 'warning' | 'error'
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {alertOpen.message}
+        </Alert>
+      </Snackbar>
       {/* Nombre del álbum */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Nombre de album</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Nombre de album
+        </label>
         <input
           type="text"
           placeholder="Enter album name"
@@ -77,7 +153,9 @@ const UploadAlbumImages = () => {
 
       {/* Descripción del álbum */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Descrición de album</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Descrición de album
+        </label>
         <textarea
           placeholder="Enter album description"
           value={albumDescription} // Valor del estado
@@ -88,7 +166,9 @@ const UploadAlbumImages = () => {
 
       {/* Nombre de la carpeta */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Nombre de Carpeta </label>
+        <label className="block text-sm font-medium text-gray-700">
+          Nombre de Carpeta{" "}
+        </label>
         <input
           type="text"
           placeholder="Enter folder name"
@@ -100,7 +180,9 @@ const UploadAlbumImages = () => {
 
       {/* Selección de imágenes */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Imagenes</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Imagenes
+        </label>
         <div className="flex items-center justify-center p-4 border border-gray-300 rounded-lg mb-4">
           <input
             type="file"
@@ -113,7 +195,9 @@ const UploadAlbumImages = () => {
           <label htmlFor="imageUpload" className="cursor-pointer text-center">
             <div className="flex flex-col items-center">
               <span className="text-2xl">📷</span>
-              <span className="mt-2 text-sm text-gray-600">Agregar imagenes</span>
+              <span className="mt-2 text-sm text-gray-600">
+                Agregar imagenes
+              </span>
             </div>
           </label>
         </div>
