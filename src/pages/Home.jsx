@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
 import { listAlbums } from "../services/services";
 import ImageCard from "../components/ImageCard";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const [albums, setAlbums] = useState([]);
 
+  const [albums, setAlbums] = useState([]);
+  const navigate = useNavigate();
+  const handleNavigation = (url) => {
+    navigate(url);
+  };
   useEffect(() => {
-    Promise.all([listAlbums()])
+    Promise.all([listAlbums({})])
       .then((res) => {
         const [albums] = res;
         const { rows } = albums.data;
         setAlbums(rows);
-        console.log(rows);
       })
       .catch((err) => {
         console.error(err);
@@ -26,12 +30,14 @@ const Home = () => {
       {albums
           ? albums.map((album) => {
               return (
+                <section key={album.id} onClick={ () => handleNavigation(`/album/${album.id}`)} className="cursor-pointer">
                 <ImageCard
                   key={album.id}
                   imageUrl={album.url}
                   title={album.title}
                   description={album.description}
                 />
+                </section>
               );
             })
           : null}

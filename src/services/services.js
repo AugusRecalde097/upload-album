@@ -60,9 +60,63 @@ export const uploadAlbum = async ({
   return result;
 };
 
-export const listAlbums = async () => {
+export const addImageToAlbum = async (idAlbum, images) => {
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      porfolio_id: idAlbum,
+      images,
+    }),
+  };
+
   const resultService = await fetch(
-    "http://localhost:3005/api/v1/admin/albums",
+    "http://localhost:3005/api/v1/admin/photo",
+    options
+  );
+
+  return resultService;
+};
+
+export const deleteImage = async ({ imageId, imageName }) => {
+  const options = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id: imageId,
+      name: imageName,
+    }),
+  };
+
+  const resultService = await fetch(
+    `http://localhost:3005/api/v1/admin/photo`,
+    options
+  );
+
+  return resultService;
+};
+
+export const listAlbums = async ({ idAlbum = 0 }) => {
+  const resultService = await fetch(
+    `http://localhost:3005/api/v1/admin/albums?id=${idAlbum}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const result = await resultService.json();
+  return result;
+};
+
+export const listPhotosByAlbum = async (idAlbum) => {
+  const resultService = await fetch(
+    `http://localhost:3005/api/v1/admin/albums/${idAlbum}`,
     {
       method: "GET",
       headers: {
