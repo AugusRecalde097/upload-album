@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
-const UploadImageModal = ({ isOpen, onClose, onDelete }) => {
+const ConfirmModal = ({ isOpen, onClose, onDelete, message }) => {
   const dialogRef = useRef(null);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const UploadImageModal = ({ isOpen, onClose, onDelete }) => {
       }}
     >
       <h2 className="text-xl font-bold text-gray-700 mb-4">
-        ¿Seguro que quiere eliminar?
+        {message}
       </h2>
 
       {/* Formulario */}
@@ -53,10 +53,11 @@ const UploadImageModal = ({ isOpen, onClose, onDelete }) => {
   );
 };
 
-UploadImageModal.propTypes = {
+ConfirmModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired
+  onDelete: PropTypes.func.isRequired,
+  message: PropTypes.string.isRequired
 };
 
-export default UploadImageModal;
+export default ConfirmModal;

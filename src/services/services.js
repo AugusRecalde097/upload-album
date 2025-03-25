@@ -73,7 +73,7 @@ export const addImageToAlbum = async (idAlbum, images) => {
   };
 
   const resultService = await fetch(
-    "http://localhost:3005/api/v1/admin/photo",
+    "http://localhost:3005/api/v1/admin/image",
     options
   );
 
@@ -93,7 +93,45 @@ export const deleteImage = async ({ imageId, imageName }) => {
   };
 
   const resultService = await fetch(
-    `http://localhost:3005/api/v1/admin/photo`,
+    `http://localhost:3005/api/v1/admin/image`,
+    options
+  );
+
+  return resultService;
+};
+
+export const deleteAlbum = async ({ idAlbum }) => {
+  const options = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id: idAlbum,
+    }),
+  };
+
+  const resultService = await fetch(
+    `http://localhost:3005/api/v1/admin/albums`,
+    options
+  );
+
+  return resultService;
+};
+
+export const updateAlbum = async ({ albumData }) => {
+  console.log(albumData);
+
+  const options = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(albumData),
+  };
+
+  const resultService = await fetch(
+    "http://localhost:3005/api/v1/admin/albums",
     options
   );
 

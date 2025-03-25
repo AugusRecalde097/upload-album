@@ -113,7 +113,7 @@ const UploadImageModal = ({ isOpen, onClose, folderId, onUpload }) => {
 };
 
 UploadImageModal.propTypes = {
-  isOpen: PropTypes.string.isRequired,
+  isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   folderId: PropTypes.string.isRequired,
   onUpload: PropTypes.func.isRequired,
