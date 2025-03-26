@@ -6,13 +6,14 @@
 ---
 
 ## Características
-
-
+- **Interfaz amigable**: La interfaz está pensada para que se pueda operar con la mejor fluidez sin conocimientos previos.
+- **Gestión de album**: Se puede generar nuevos albums, con sus respectivo titulo, descripción y fotos. También se cuenta con una pantalla de modificación, si se desea cambiar algo.
+- **Gestión de fotos**: Subida de fotos al generar un album nuevo, asi como individualmente desde la pantalla de modificación. 
 ---
 
 ## Tecnologías Utilizadas
 
-- **Frontend**: React
+- **Frontend**: ReactJs
 - **Backend**: ExpessJs
 - **Base de Datos**: SQLite con Turso.io
 - **Autenticación**: JWT
@@ -46,8 +47,8 @@
 3. Configura las variables de entorno:
    - Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
      ```plaintext
-     VITE_CLOUD_NAME=CLOUD_NAME
-     VITE_UPLOAD_PRESET=UPLOAD_PRESET
+     VITE_CLOUD_NAME="CLOUD_NAME de Cloudinary"
+     VITE_UPLOAD_PRESET="UPLOAD_PRESET de Cloudinary"
      ```
 
 4. Inicia el servidor de desarrollo:
@@ -56,7 +57,7 @@
    # o
    yarn dev
    ```
-   La aplicación estará disponible en `http://localhost:3000`.
+   La aplicación estará disponible en `http://localhost:5173`.
 
 5. (Opcional) Realiza el despliegue en Vercel:
    - Conecta tu repositorio en [Vercel](https://vercel.com/).
@@ -102,7 +103,7 @@ Este proyecto es personal y no acepta contribuciones externas en este momento. S
 
 ## Autor
 
-**Augusto**  
+**Augusto Recalde**  
 Full Stack Developer
 [LinkedIn](https://www.linkedin.com/in/arecaldedev/) | [GitHub](https://github.com/AugusRecalde097)
 
