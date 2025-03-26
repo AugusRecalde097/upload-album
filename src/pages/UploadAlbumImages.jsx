@@ -3,6 +3,9 @@ import { uploadAlbum, uploadImage } from "../services/services"; // Importa la f
 import { compressFileSelection } from "../utilities"; // Importa la función de selección de archivos
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import Tooltip from "../components/Tooltip";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Save, Upload, Camera } from "@mui/icons-material";
 // import { useNavigate } from "react-router-dom";
 
 const UploadAlbumImages = () => {
@@ -16,11 +19,9 @@ const UploadAlbumImages = () => {
 
   const [showButton, setShowButton] = useState(false);
 
-
   useEffect(() => {
-    console.log(cantidadImages);  
+    console.log(cantidadImages);
   }, [cantidadImages]);
-
 
   // const navigate = useNavigate();
   const [alertOpen, setAlertOpen] = useState({
@@ -119,7 +120,6 @@ const UploadAlbumImages = () => {
   };
 
   const handleFileSelection = async (e) => {
-
     const compressedFiles = await compressFileSelection(e);
     setSelectedFiles(compressedFiles); // Guardamos las imágenes comprimidas
     console.log(e.target.files);
@@ -208,7 +208,7 @@ const UploadAlbumImages = () => {
                   `Imagenes seleccionadas: ${cantidadImages}`
                 ) : (
                   <div className="flex flex-col items-center">
-                    <span className="text-2xl">📷</span>
+                    <span className="text-2xl"><Camera /></span>
                     <span className="mt-2 text-sm text-gray-600">
                       Agregar imagenes
                     </span>
@@ -247,27 +247,33 @@ const UploadAlbumImages = () => {
 
         {/* Botones */}
         <div className="flex justify-between mt-4">
-          <button
-            onClick={handleClearImages}
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
-          >
-            Limpiar
-          </button>
+          <Tooltip text="Limpiar">
+            <button
+              onClick={handleClearImages}
+              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-200 transition"
+            >
+              <DeleteIcon />
+            </button>
+          </Tooltip>
           <div className="flex space-x-3">
             {showButton ? (
+              <Tooltip text="Guardar álbum">
               <button
                 onClick={handleSaveAlbum} // Guardar los datos del álbum
-                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-green-700 transition"
               >
-                Guardar álbum
+                <Save />
               </button>
+              </Tooltip>
             ) : null}
+            <Tooltip text="Subir imágenes">
             <button
               onClick={uploadImagesToCloudinary}
-              className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition"
+              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-black transition"
             >
-              Subir imágenes
+              <Upload />
             </button>
+            </Tooltip>
           </div>
         </div>
       </div>

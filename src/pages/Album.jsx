@@ -14,6 +14,8 @@ import UploadImageModal from "../components/UploadImageModal";
 import DeleteImageModal from "../components/DeleteImageModal";
 import { Alert, Snackbar } from "@mui/material";
 import ConfirmModal from "../components/ConfirmModal";
+import TooltipCustom from "../components/Tooltip";
+import TooltipMUI from "@mui/material/Tooltip";
 
 const Album = () => {
   //Rescato el id del album desde la URL con useParams de react-router-dom
@@ -64,9 +66,10 @@ const Album = () => {
     );
   };
 
-  const handleDeleteAlbum =  ({ id }) => {
-
-      deleteAlbum({ idAlbum : id }).then((res) => res.json()).then((data) => {
+  const handleDeleteAlbum = ({ id }) => {
+    deleteAlbum({ idAlbum: id })
+      .then((res) => res.json())
+      .then((data) => {
         if (data.error) {
           showAlert({
             message: `Error al eliminar el álbum. ${data.msg}`,
@@ -78,9 +81,8 @@ const Album = () => {
           message: "Álbum eliminado con éxito!",
           severity: "success",
         });
-      //  handleNavigation("/");
-      }
-      );
+        //  handleNavigation("/");
+      });
   };
 
   const handleSetThumbnail = (image) => setThumbnail(image.name); // Establecer miniatura
@@ -103,13 +105,13 @@ const Album = () => {
     }
 
     const albumData = {
-      id: idAlbum,  // ID del álbum
+      id: idAlbum, // ID del álbum
       title: album.title,
       description: album.description,
       thumbnail: thumbnail, // ID de la miniatura seleccionada
     };
 
-    const addAlbum = await updateAlbum({albumData});
+    const addAlbum = await updateAlbum({ albumData });
 
     if (addAlbum?.error) {
       showAlert({
@@ -168,7 +170,9 @@ const Album = () => {
               </label>
               <textarea
                 value={album.description}
-                onChange={(e) => setAlbum({ ...album, description: e.target.value })}
+                onChange={(e) =>
+                  setAlbum({ ...album, description: e.target.value })
+                }
                 placeholder="Ingrese una descripción"
                 className="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 rows="3"
@@ -176,12 +180,30 @@ const Album = () => {
             </div>
             {/* Botones */}
             <div className="flex  mt-4 gap-3">
-              <button onClick={handleSaveAlbum} className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
-                <Save />
-              </button>
-              <button onClick={ ()=> handleDeleteAlbum({ id: idAlbum })} className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
-                <Delete />
-              </button>
+              <TooltipCustom text="Guardar">
+                <button
+                  onClick={handleSaveAlbum}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-green-500 transition"
+                >
+                  <Save />
+                </button>
+              </TooltipCustom>
+              <TooltipCustom text="Eliminar">
+                <button
+                  onClick={() => handleDeleteAlbum({ id: idAlbum })}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-red-500 transition"
+                >
+                  <Delete />
+                </button>
+              </TooltipCustom>
+              <TooltipCustom text="Subir Imagen">
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg shadow-md hover:bg-blue-500 transition"
+                >
+                  <UploadIcon />
+                </button>
+              </TooltipCustom>
             </div>
           </div>
           {/* Galería de imágenes */}
@@ -190,17 +212,11 @@ const Album = () => {
               Imágenes del Álbum
             </h3>
             {/* Botones */}
-            <div className="flex justify-between mt-2 gap-3">
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition"
-              >
-                <UploadIcon />
-              </button>
-            </div>
+            <div className="flex justify-between mt-2 gap-3"></div>
             <div className="grid grid-cols-3 gap-4 mt-3">
               {images.map((image) => (
                 <div key={image.id} className="relative group">
+                  <TooltipMUI title="Seleccionar como miniatura" followCursor>
                   <img
                     className={`h-full w-full object-cover cursor-pointer rounded-md ${
                       thumbnail === image.name
@@ -216,15 +232,18 @@ const Album = () => {
                     alt={image.name}
                     onClick={() => handleSetThumbnail(image)} // Establecer miniatura al hacer clic
                   />
-                  <button
-                    onClick={() => {
-                      setConfirmDelete(true);
-                      setImageToDelete({ id: image.id, name: image.name });
-                    }}
-                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-80 hover:opacity-100 transition"
-                  >
-                    <DeleteIcon />
-                  </button>
+                  </TooltipMUI>
+                  <TooltipCustom text="Eliminar">
+                    <button
+                      onClick={() => {
+                        setConfirmDelete(true);
+                        setImageToDelete({ id: image.id, name: image.name });
+                      }}
+                      className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-80 hover:opacity-100 transition"
+                    >
+                      <DeleteIcon />
+                    </button>
+                  </TooltipCustom>
                 </div>
               ))}
             </div>
@@ -238,14 +257,12 @@ const Album = () => {
           }}
         />
         <ConfirmModal
-        isOpen={confirmDeleteAlbum}
-        onClose={() => setConfirmDeleteAlbum(false)}
-        onDelete={() => {
-          handleDeleteAlbum({ id: idAlbum });
-        }}
-        >
-
-        </ConfirmModal>
+          isOpen={confirmDeleteAlbum}
+          onClose={() => setConfirmDeleteAlbum(false)}
+          onDelete={() => {
+            handleDeleteAlbum({ id: idAlbum });
+          }}
+        ></ConfirmModal>
         <UploadImageModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
